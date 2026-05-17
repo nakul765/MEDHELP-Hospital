@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: hospital-website
+    name: medhelp-hospital
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
