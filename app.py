@@ -1,11 +1,7 @@
-
 from flask import Flask, render_template, redirect, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 
 app = Flask(__name__)
 app.secret_key = 'super_secret_hospital_key'
@@ -24,38 +20,6 @@ db = SQLAlchemy(app)
 # =========================
 ADMIN_EMAIL = "admin@hospital.com"
 ADMIN_PASS = "nakul@123"
-
-# =========================
-# EMAIL CONFIGURATION
-# =========================
-SENDER_EMAIL = 'nakulhemant2211@gmail.com'
-SENDER_PASSWORD = 'ndmaeravnthyiaqr'
-
-
-# =========================
-# EMAIL FUNCTION
-# =========================
-def send_email(receiver_email, subject, body):
-    try:
-        msg = MIMEMultipart()
-        msg['From'] = SENDER_EMAIL
-        msg['To'] = receiver_email
-        msg['Subject'] = subject
-
-        msg.attach(MIMEText(body, 'plain'))
-
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(SENDER_EMAIL, SENDER_PASSWORD)
-        server.send_message(msg)
-        server.quit()
-
-        print("Email sent successfully")
-        return True
-
-    except Exception as e:
-        print("Email Error:", e)
-        return False
 
 
 # =========================
@@ -171,23 +135,6 @@ def signup():
         db.session.add(new_user)
         db.session.commit()
 
-        # Welcome Email
-        subject = "Welcome to MEDHELP Hospital"
-
-        body = f"""
-Hello {username},
-
-Thank you for signing up on MEDHELP Hospital.
-
-We will keep you updated about our hospital services.
-
-Stay healthy!
-
-MEDHELP Hospital
-"""
-
-        send_email(email, subject, body)
-
         flash('Signup successful. Please login.', 'success')
         return redirect('/login')
 
@@ -273,27 +220,6 @@ def appointment():
             db.session.add(new_appointment)
             db.session.commit()
 
-            subject = "Appointment Booked Successfully"
-
-            body = f"""
-Hello {new_appointment.name},
-
-Your appointment has been booked successfully.
-
-Appointment Details:
-Department: {new_appointment.dept}
-Doctor: {new_appointment.doctor}
-Date: {new_appointment.date}
-Time: {new_appointment.time}
-
-We will notify you after admin approval.
-
-Thank you,
-MEDHELP Hospital
-"""
-
-            send_email(new_appointment.email, subject, body)
-
             flash('Appointment booked successfully!', 'success')
             return redirect('/your_appointments')
 
@@ -357,59 +283,12 @@ def update_status(id, status):
     appt.status = status
     db.session.commit()
 
-    # ACCEPT EMAIL
     if status == 'Accept':
-
-        subject = 'Appointment Accepted'
-
-        body = f"""
-Hello {appt.name},
-
-Your appointment has been ACCEPTED.
-
-Appointment Details:
-Department: {appt.dept}
-Doctor: {appt.doctor}
-Date: {appt.date}
-Time: {appt.time}
-
-Please arrive 10 minutes early.
-
-Thank you,
-MEDHELP Hospital
-"""
-
-        send_email(appt.email, subject, body)
-
         flash(
             f'Appointment for {appt.name} accepted successfully.',
             'success'
         )
-
-    # CANCEL EMAIL
     else:
-
-        subject = 'Appointment Cancelled'
-
-        body = f"""
-Hello {appt.name},
-
-Your appointment has been CANCELLED.
-
-Appointment Details:
-Department: {appt.dept}
-Doctor: {appt.doctor}
-Date: {appt.date}
-Time: {appt.time}
-
-Please book another appointment later.
-
-Thank you,
-MEDHELP Hospital
-"""
-
-        send_email(appt.email, subject, body)
-
         flash(
             f'Appointment for {appt.name} cancelled successfully.',
             'error'
@@ -469,30 +348,8 @@ def profile():
 # =========================
 @app.route('/email', methods=['POST'])
 def email():
-
-    user_email = request.form['email'].strip().lower()
-
-    subject = "MEDHELP Hospital Newsletter"
-
-    body = """
-Hello,
-
-Thank you for subscribing to MEDHELP Hospital.
-
-We will send you health updates and hospital news.
-
-Stay healthy!
-
-MEDHELP Hospital
-"""
-
-    success = send_email(user_email, subject, body)
-
-    if success:
-        flash('Thank you for subscribing!', 'success')
-    else:
-        flash('Email sending failed.', 'error')
-
+    # Email functionality removed for Render compatibility
+    flash('Thank you for subscribing!', 'success')
     return redirect('/')
 
 
