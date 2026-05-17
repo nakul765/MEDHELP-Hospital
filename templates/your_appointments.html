@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="container">
+    <div class="section-title"><h2>Your Appointments</h2></div>
+    <div class="glass-card table-responsive-container">
+        {% if appointments %}
+            <table class="responsive-table" style="width: 100%; border-collapse: collapse; text-align: center;">
+                <thead>
+                    <tr style="background-color: var(--primary-dark); color: white;">
+                        <th style="padding: 12px;">Patient</th>
+                        <th style="padding: 12px;">Dept</th>
+                        <th style="padding: 12px;">Date & Time</th>
+                        <th style="padding: 12px;">Doctor</th>
+                        <th style="padding: 12px;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appt in appointments %}
+                    <tr style="border-bottom: 1px solid var(--glass-border);">
+                        <td style="padding: 12px;">{{ appt.name }}</td>
+                        <td style="padding: 12px;">{{ appt.dept }}</td>
+                        <td style="padding: 12px;">{{ appt.date }} @ {{ appt.time }}</td>
+                        <td style="padding: 12px;">{{ appt.doctor }}</td>
+                        <td style="padding: 12px;">
+                            <span style="padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; color: white;
+                                background: {% if appt.status == 'Accept' %}#2ecc71{% elif appt.status == 'Cancel' %}#e74c3c{% else %}#f1c40f{% endif %};">
+                                {{ appt.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p style="text-align: center; padding: 20px;">No appointments found. <a href="/appointment" style="color: var(--accent-blue); font-weight: 600;">Book one now.</a></p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="container" style="margin-top: 50px;">
+    <div class="section-title">
+        <h2>My Profile</h2>
+        <p>Welcome back, {{ current_user.username }}!</p>
+    </div>
+
+    <div class="glass-card profile-info-card" style="max-width: 800px; margin: 0 auto 30px; text-align: center;">
+        <i class="fas fa-user-circle" style="font-size: 5rem; color: var(--accent-blue); margin-bottom: 20px;"></i>
+
+        <h3>Account Details</h3>
+        <p><strong>Username:</strong> {{ current_user.username }}</p>
+        <p><strong>Email Address:</strong> {{ current_user.email }}</p>
+
+        <br>
+        <a href="/appointment" class="btn">Book a New Appointment</a>
+    </div>
+
+    <div class="glass-card table-responsive-container" style="max-width: 800px; margin: 0 auto;">
+        <h3 style="text-align: center; margin-bottom: 20px; color: var(--primary-dark);">Your Appointments</h3>
+
+        {% if appointments %}
+        <table class="responsive-table" style="width: 100%; border-collapse: collapse; text-align: center;">
+            <thead>
+                <tr style="background-color: var(--primary-dark); color: white;">
+                    <th style="padding: 12px;">Date</th>
+                    <th style="padding: 12px;">Time</th>
+                    <th style="padding: 12px;">Doctor</th>
+                    <th style="padding: 12px;">Department</th>
+                    <th style="padding: 12px;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appt in appointments %}
+                <tr style="border-bottom: 1px solid var(--glass-border);">
+                    <td style="padding: 12px;">{{ appt.date }}</td>
+                    <td style="padding: 12px;">{{ appt.time }}</td>
+                    <td style="padding: 12px; font-weight: 500; color: var(--accent-blue);">{{ appt.doctor }}</td>
+                    <td style="padding: 12px;">{{ appt.dept }}</td>
+                    <td style="padding: 12px;">
+                        <span style="padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: white;
+                                background: 
+                                {% if appt.status == 'Accept' %}#2ecc71
+                                {% elif appt.status == 'Cancel' %}#e74c3c
+                                {% else %}#f1c40f
+                                {% endif %};">
+                            {{ appt.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="text-align: center; color: #666; padding: 20px;">
+            <i class="fas fa-calendar-times"
+                style="font-size: 2rem; color: var(--accent-red); margin-bottom: 10px; display: block;"></i>
+            You have no upcoming appointments yet.
+        </p>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
