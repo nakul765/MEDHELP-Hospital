@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="container">
+    <div class="section-title">
+        <h2>Admin Control Panel</h2>
+        <p>Total Hospital Appointments: {{ appointments|length }}</p>
+    </div>
+    <div class="glass-card table-responsive-container">
+        <table class="responsive-table" style="width: 100%; border-collapse: collapse; text-align: center;">
+            <thead>
+                <tr style="background-color: var(--primary-dark); color: white;">
+                    <th style="padding: 12px;">Patient</th>
+                    <th style="padding: 12px;">Medical Info</th>
+                    <th style="padding: 12px;">Schedule</th>
+                    <th style="padding: 12px;">Current Status</th>
+                    <th style="padding: 12px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appt in appointments %}
+                <tr style="border-bottom: 1px solid var(--glass-border);">
+                    <td style="padding: 12px; text-align: left;"><strong>{{ appt.name }}</strong><br>{{ appt.email }}</td>
+                    <td style="padding: 12px;">{{ appt.dept }}<br><small>Doc: {{ appt.doctor }}</small></td>
+                    <td style="padding: 12px;">{{ appt.date }}<br>{{ appt.time }}</td>
+                    <td style="padding: 12px;">
+                        <span style="padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: white;
+                            background: {% if appt.status == 'Accept' %}#2ecc71{% elif appt.status == 'Cancel' %}#e74c3c{% else %}#f1c40f{% endif %};">
+                            {{ appt.status }}
+                        </span>
+                    </td>
+                    <td style="padding: 12px;">
+                        <a href="/update_status/{{ appt.p_id }}/Accept" class="btn" style="background: #2ecc71; padding: 6px 12px; font-size: 0.85rem;">Accept</a>
+                        <a href="/update_status/{{ appt.p_id }}/Cancel" class="btn btn-red" style="padding: 6px 12px; font-size: 0.85rem;">Cancel</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

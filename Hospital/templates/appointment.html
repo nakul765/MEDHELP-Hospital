@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="form-section container">
+    <div class="glass-card form-container">
+        <div class="section-title">
+            <h2>Book an Appointment</h2>
+            <p>Fill out the form below and we will confirm your slot shortly.</p>
+        </div>
+        <form id="appointment-form" action="{{ url_for('appointment') }}" method="POST" onsubmit="preventDuplicateSubmit(event)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Patient Name</label>
+                    <input type="text" name="patient_name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone_no" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" name="age" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select name="gender" class="form-control" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Department</label>
+                    <select name="department" class="form-control" required>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="Orthopedic">Orthopedic</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="General Medicine">General Medicine</option>
+                        <option value="Dermatology">Dermatology</option>
+                        <option value="Oncology">Oncology</option>
+                        <option value="Endocrinology">Endocrinology</option>
+                        <option value="Gastroenterology">Gastroenterology</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Preferred Date</label>
+                    <input type="date" name="date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Preferred Time</label>
+                    <input type="time" name="time" class="form-control" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Select Doctor (Optional)</label>
+                <select name="doctor" class="form-control">
+                    <option value="Any">Any Available Doctor</option>
+                    {% if doctors %}
+                        {% for doc in doctors %}
+                            <option value="{{ doc.name }}">{{ doc.name }} ({{ doc.spec }})</option>
+                        {% endfor %}
+                    {% else %}
+                        <option value="Dr. Aarav Sharma">Dr. Aarav Sharma (Cardiology)</option>
+                        <option value="Dr. Ananya Iyer">Dr. Ananya Iyer (Cardiology)</option>
+                        <option value="Dr. Vikram Malhotra">Dr. Vikram Malhotra (Cardiology)</option>
+                        <option value="Dr. Meera Nair">Dr. Meera Nair (Neurology)</option>
+                        <option value="Dr. Arjun Banerjee">Dr. Arjun Banerjee (Neurology)</option>
+                    {% endif %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Additional Message / Symptoms</label>
+                <textarea name="message" class="form-control" placeholder="Briefly describe your symptoms..."></textarea>
+            </div>
+            <button id="submit-btn" type="submit" class="btn" style="width: 100%; font-size: 1.1rem;">Confirm Booking</button>
+        </form>
+    </div>
+</section>
+
+<script>
+function preventDuplicateSubmit(event) {
+    const submitBtn = document.getElementById('submit-btn');
+    
+    // Check if the form is already processing
+    if (submitBtn.hasAttribute('disabled')) {
+        event.preventDefault();
+        return false;
+    }
+    
+    // Visually update the button styling and block further clicks
+    submitBtn.setAttribute('disabled', 'true');
+    submitBtn.innerText = 'Processing...';
+    submitBtn.style.opacity = '0.7';
+    submitBtn.style.cursor = 'not-allowed';
+    
+    return true;
+}
+</script>
+{% endblock %}

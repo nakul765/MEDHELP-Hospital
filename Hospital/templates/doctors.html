@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="container" style="margin-top: 50px;">
+    <div class="section-title">
+        <h2>Meet Our Specialists</h2>
+        <p>Our team of highly experienced professionals is here for you.</p>
+    </div>
+    
+    <div style="max-width: 500px; margin: 0 auto 40px; display: flex; gap: 10px; padding: 0 15px;">
+        <input type="text" id="doctor-search" class="form-control" placeholder="Search by name or department...">
+        <button class="btn"><i class="fas fa-search"></i></button>
+    </div>
+
+    <div class="grid-4" id="doctors-grid">
+        {% for doc in doctors %}
+        <div class="glass-card doc-card">
+            <div style="font-size: 3.2rem; color: var(--primary-dark); background: var(--primary-light); width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; border: 3px solid var(--accent-blue); transition: var(--transition);">
+                <i class="fas {{ doc.img }}"></i>
+            </div>
+            <h3 class="doc-name" style="font-size: 1.25rem; margin-bottom: 5px;">{{ doc.name }}</h3>
+            <p class="doc-spec" style="color: var(--accent-blue); font-weight: 600; font-size: 0.95rem; margin-bottom: 3px;">{{ doc.spec }}</p>
+            <p style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 15px;">Experience: {{ doc.exp }}</p>
+            <div class="social-icons" style="margin-bottom: 20px;">
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fas fa-envelope"></i></a>
+            </div>
+            <a href="{{ url_for('appointment') }}" class="btn" style="width: 100%;">Book Appointment</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.getElementById("doctor-search");
+    if(searchInput) {
+        searchInput.addEventListener("input", function(e) {
+            const query = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll("#doctors-grid .doc-card");
+            
+            cards.forEach(card => {
+                const name = card.querySelector(".doc-name").textContent.toLowerCase();
+                const spec = card.querySelector(".doc-spec").textContent.toLowerCase();
+                if(name.includes(query) || spec.includes(query)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

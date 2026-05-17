@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="hero">
+    <div class="hero-shape"></div>
+
+    <div class="hero-content">
+        <h1>Welcome to MEDHELP</h1>
+
+        <p>
+            Advanced Technology. Compassionate Care.
+            We are committed to providing the highest standard
+            of healthcare services for you and your family.
+        </p>
+
+        <div class="hero-btns">
+            <a href="{{ url_for('appointment') }}" class="btn">
+                Book Appointment
+            </a>
+
+            <a href="{{ url_for('contact') }}" class="btn btn-red">
+                Emergency Call
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="container">
+
+    <div class="section-title">
+        <h2>Our Core Services</h2>
+        <p>
+            Comprehensive care tailored to your unique medical needs.
+        </p>
+    </div>
+
+    <div class="grid-3">
+
+        <div class="glass-card dept-card text-center">
+            <i class="fas fa-heartbeat"></i>
+
+            <h3>Heart Care</h3>
+
+            <p>
+                State-of-the-art cardiology treatments and surgeries.
+            </p>
+        </div>
+
+        <div class="glass-card dept-card text-center">
+            <i class="fas fa-brain"></i>
+
+            <h3>Neurology</h3>
+
+            <p>
+                Advanced diagnostics and treatment for brain conditions.
+            </p>
+        </div>
+
+        <div class="glass-card dept-card text-center">
+            <i class="fas fa-user-md"></i>
+
+            <h3>Expert Doctors</h3>
+
+            <p>
+                Consult with globally recognized medical professionals.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="stats">
+
+    <div class="stat-item">
+        <h3 class="counter" data-target="1500">0</h3>
+        <p>Happy Patients</p>
+    </div>
+
+    <div class="stat-item">
+        <h3 class="counter" data-target="120">0</h3>
+        <p>Expert Doctors</p>
+    </div>
+
+    <div class="stat-item">
+        <h3 class="counter" data-target="25">0</h3>
+        <p>Departments</p>
+    </div>
+
+    <div class="stat-item">
+        <h3 class="counter" data-target="15">0</h3>
+        <p>Years Experience</p>
+    </div>
+
+</section>
+
+<section class="container">
+
+    <div class="section-title">
+        <h2>Why Choose MEDHELP?</h2>
+
+        <p>
+            We combine modern technology with experienced healthcare professionals.
+        </p>
+    </div>
+
+    <div class="grid-3">
+
+        <div class="glass-card text-center">
+            <i class="fas fa-ambulance"></i>
+
+            <h3>24/7 Emergency</h3>
+
+            <p>
+                Emergency medical services available all day and night.
+            </p>
+        </div>
+
+        <div class="glass-card text-center">
+            <i class="fas fa-stethoscope"></i>
+
+            <h3>Advanced Equipment</h3>
+
+            <p>
+                Latest healthcare technology for accurate treatment.
+            </p>
+        </div>
+
+        <div class="glass-card text-center">
+            <i class="fas fa-hand-holding-heart"></i>
+
+            <h3>Patient Care</h3>
+
+            <p>
+                Friendly staff focused on patient comfort and recovery.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
