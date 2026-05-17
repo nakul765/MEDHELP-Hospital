@@ -8,23 +8,17 @@ app.secret_key = 'super_secret_hospital_key'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hospital.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# Prevent browser cache issues
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-
 
 db = SQLAlchemy(app)
 
-# =========================
-# ADMIN LOGIN DETAILS
-# =========================
+with app.app_context():
+    db.create_all()
+
 ADMIN_EMAIL = "admin@hospital.com"
 ADMIN_PASS = "nakul@123"
 
 
-# =========================
-# MODELS
-# =========================
 class Appointment(db.Model):
     p_id = db.Column(db.Integer, primary_key=True)
 
@@ -44,8 +38,6 @@ class Appointment(db.Model):
     date = db.Column(db.Date, nullable=False)
     time = db.Column(db.Time, nullable=False)
     message = db.Column(db.Text, nullable=True)
-
-    # Pending / Accepted / Cancelled
     status = db.Column(db.String(50), default="Pending")
 
 
@@ -57,9 +49,10 @@ class User(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 
-# =========================
-# DOCTORS DATA
-# =========================
+with app.app_context():
+    db.create_all()
+
+
 DOCTORS_DATASET = [
     {"name": "Dr. Aarav Sharma", "spec": "Cardiology", "exp": "14 Years", "img": "fa-heartbeat"},
     {"name": "Dr. Ananya Iyer", "spec": "Cardiology", "exp": "11 Years", "img": "fa-heartbeat"},
@@ -93,17 +86,11 @@ DOCTORS_DATASET = [
 ]
 
 
-# =========================
-# ROUTES
-# =========================
 @app.route('/')
 def index():
     return render_template('index.html')
 
 
-# =========================
-# SIGNUP
-# =========================
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
 
@@ -113,7 +100,6 @@ def signup():
         email = request.form['email'].strip().lower()
         password = request.form['password']
 
-        # Prevent admin email registration
         if email == ADMIN_EMAIL:
             flash('This email is reserved for admin.', 'error')
             return redirect('/signup')
@@ -141,9 +127,6 @@ def signup():
     return render_template('signup.html')
 
 
-# =========================
-# LOGIN
-# =========================
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 
@@ -152,7 +135,6 @@ def login():
         email = request.form['email'].strip().lower()
         password = request.form['password']
 
-        # ADMIN LOGIN
         if email == ADMIN_EMAIL:
 
             if password == ADMIN_PASS:
@@ -167,7 +149,6 @@ def login():
                 flash('Invalid admin password.', 'error')
                 return redirect('/login')
 
-        # NORMAL USER LOGIN
         user = User.query.filter_by(email=email).first()
 
         if not user:
@@ -189,9 +170,6 @@ def login():
     return render_template('login.html')
 
 
-# =========================
-# APPOINTMENT
-# =========================
 @app.route('/appointment', methods=['GET', 'POST'])
 def appointment():
 
@@ -231,17 +209,11 @@ def appointment():
     return render_template('appointment.html', doctors=DOCTORS_DATASET)
 
 
-# =========================
-# DOCTORS PAGE
-# =========================
 @app.route('/doctors')
 def doctors():
     return render_template('doctors.html', doctors=DOCTORS_DATASET)
 
 
-# =========================
-# USER APPOINTMENTS
-# =========================
 @app.route('/your_appointments')
 def your_appointments():
 
@@ -258,9 +230,6 @@ def your_appointments():
     )
 
 
-# =========================
-# ADMIN STATUS UPDATE
-# =========================
 @app.route('/update_status/<int:id>/<string:status>')
 def update_status(id, status):
 
@@ -270,12 +239,10 @@ def update_status(id, status):
 
     appt = Appointment.query.get_or_404(id)
 
-    # Prevent multiple clicks issue
     if appt.status != "Pending":
         flash('Appointment already updated.', 'error')
         return redirect('/admin_dashboard')
 
-    # Only valid statuses
     if status not in ['Accept', 'Cancel']:
         flash('Invalid status.', 'error')
         return redirect('/admin_dashboard')
@@ -297,9 +264,6 @@ def update_status(id, status):
     return redirect('/admin_dashboard')
 
 
-# =========================
-# ADMIN DASHBOARD
-# =========================
 @app.route('/admin_dashboard')
 def admin_dashboard():
 
@@ -317,9 +281,6 @@ def admin_dashboard():
     )
 
 
-# =========================
-# PROFILE
-# =========================
 @app.route('/profile')
 def profile():
 
@@ -343,19 +304,12 @@ def profile():
     )
 
 
-# =========================
-# NEWSLETTER EMAIL
-# =========================
 @app.route('/email', methods=['POST'])
 def email():
-    # Email functionality removed for Render compatibility
     flash('Thank you for subscribing!', 'success')
     return redirect('/')
 
 
-# =========================
-# LOGOUT
-# =========================
 @app.route('/logout')
 def logout():
     session.clear()
@@ -363,9 +317,6 @@ def logout():
     return redirect('/')
 
 
-# =========================
-# OTHER PAGES
-# =========================
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -381,12 +332,5 @@ def departments():
     return render_template('departments.html')
 
 
-# =========================
-# MAIN
-# =========================
 if __name__ == '__main__':
-
-    with app.app_context():
-        db.create_all()
-
     app.run(host='0.0.0.0', port=5000)
